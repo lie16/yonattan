@@ -17,6 +17,7 @@ public class Employee extends BaseModel{
     private String province;
     private String email;
     private String phoneNumber;
+    private Boolean active;
 
 //    @OneToOne(fetch = FetchType.LAZY)
 //    private Department department;
