@@ -21,7 +21,7 @@ public class StocksService {
 
     private StocksSpecification stocksSpecification;
 
-    public Stock getEmployeeById(int id)
+    public Stock getStockById(int id)
     {
         Optional<Stock> employee = stockRepo.findById(id);
 //        return employee.isPresent() ? employee.get() : null;

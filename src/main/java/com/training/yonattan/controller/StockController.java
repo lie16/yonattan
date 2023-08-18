@@ -21,7 +21,26 @@ public class StockController {
     private StocksService stocksService;
 
     @GetMapping("")
-    public ResponseEntity<Object> getEmployees() {
+    public ResponseEntity<Object> getStock() {
+        try{
+            Page<Stock> page = stocksService.getAll();
+            List<StockResponse> responses = new ArrayList<>();
+            for (Stock stock : page) {
+                StockResponse stockResponse = new StockResponse();
+                stockResponse.setStockCode(stock.getStockCode());
+                stockResponse.setDescription(stock.getDescription());
+                stockResponse.setActive(stock.getActive());
+                responses.add(stockResponse);
+            }
+            return ResponseHandler.generateResponse("Successfully added data!", HttpStatus.OK,
+                    page.getTotalElements(), page.getTotalPages(), responses);
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0,0,null);
+        }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Object> getStockById() {
         try{
             Page<Stock> page = stocksService.getAll();
             List<StockResponse> responses = new ArrayList<>();
