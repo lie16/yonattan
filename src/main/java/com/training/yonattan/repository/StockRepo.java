@@ -13,9 +13,11 @@ import java.util.List;
 public interface StockRepo extends
         JpaRepository<Stock, Integer>,
         JpaSpecificationExecutor<Stock> {
-    Page<Stock> findAll(StocksSpecification specification, Pageable pageable);
+//    Page<Stock> findAllBySpecification(StocksSpecification specification, Pageable pageable);
+//
+//    List<Stock> findAllBySpecification(StocksSpecification specification);
 
-    List<Stock> findAll(StocksSpecification specification);
+    Page<Stock> findAll(Pageable pageable);
 
 //    @Query(value = "select e.employee_id as employeeId, e.email as email, e.employee_name as employeeName , " +
 //            "d.department_name as department  \n" +

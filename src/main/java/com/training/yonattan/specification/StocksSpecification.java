@@ -3,7 +3,7 @@ package com.training.yonattan.specification;
 import com.training.yonattan.entities.Stock;
 import org.springframework.data.jpa.domain.Specification;
 
-public class StocksSpecification {
+public class StocksSpecification  {
     private  Specification<Stock> stockCode(String stockCode) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("stockCode"), stockCode);
