@@ -39,7 +39,7 @@ public class StockController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/find-by-id")
     public ResponseEntity<Object> getStockById() {
         try{
             Page<Stock> page = stocksService.getAll();

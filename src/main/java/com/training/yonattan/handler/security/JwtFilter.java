@@ -1,4 +1,4 @@
-package com.training.yonattan.handler;
+package com.training.yonattan.handler.security;
 
 import com.training.yonattan.services.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +43,8 @@ public class JwtFilter extends OncePerRequestFilter {
       }
     } catch (Exception e) {
       logger.error("Cannot set user authentication: {}", e);
+      System.out.println("Cannot set user authentication");
+//      TODO mungkin ini
     }
 
     filterChain.doFilter(request, response);

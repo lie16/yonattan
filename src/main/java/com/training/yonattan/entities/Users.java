@@ -8,14 +8,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 @Data
 @Entity
 public class Users implements UserDetails {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private int userId;
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID userId;
 
   private String email;
 

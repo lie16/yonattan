@@ -1,7 +1,7 @@
 package com.training.yonattan.controller;
 
 import com.training.yonattan.entities.Users;
-import com.training.yonattan.handler.JwtUtils;
+import com.training.yonattan.handler.security.JwtUtils;
 import com.training.yonattan.handler.request.SignInRequest;
 import com.training.yonattan.repository.UsersRepository;
 import com.training.yonattan.services.UsersService;

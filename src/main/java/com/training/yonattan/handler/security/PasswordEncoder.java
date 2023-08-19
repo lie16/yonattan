@@ -1,4 +1,4 @@
-package com.training.yonattan.handler;
+package com.training.yonattan.handler.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

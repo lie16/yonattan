@@ -1,4 +1,4 @@
-package com.training.yonattan.handler;
+package com.training.yonattan.handler.security;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
