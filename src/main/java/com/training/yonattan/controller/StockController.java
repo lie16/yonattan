@@ -2,9 +2,11 @@ package com.training.yonattan.controller;
 
 import com.training.yonattan.entities.Stock;
 import com.training.yonattan.handler.request.CreateStockDTO;
+import com.training.yonattan.handler.request.FilterStockRequest;
 import com.training.yonattan.handler.response.StockResponse;
 import com.training.yonattan.handler.response.ResponseHandler;
 import com.training.yonattan.services.StocksService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,33 @@ public class StockController {
     public ResponseEntity<Object> getStock() {
         try{
             Page<Stock> page = stocksService.getAll();
+            List<StockResponse> responses = new ArrayList<>();
+            for (Stock stock : page) {
+                StockResponse stockResponse = new StockResponse();
+                stockResponse.setStockCode(stock.getStockCode());
+                stockResponse.setDescription(stock.getDescription());
+                stockResponse.setActive(stock.getActive());
+                responses.add(stockResponse);
+            }
+            return ResponseHandler.generateResponse("Successfully added data!", HttpStatus.OK,
+                    page.getTotalElements(), page.getTotalPages(), responses);
+        } catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0,0,null);
+        }
+    }
+
+    @PostMapping("/filters")
+    public ResponseEntity<Object> getStockFiltered(@RequestBody FilterStockRequest filterStockRequest) {
+        try{
+            System.out.println("page = " + filterStockRequest.getPage());
+            System.out.println("active = " + filterStockRequest.getActive());
+            Page<Stock> page = stocksService.findAll(
+                    filterStockRequest.getPage(),
+                    filterStockRequest.getPageSize(),
+                    filterStockRequest.getStockCode(),
+                    filterStockRequest.getDescription(),
+                    filterStockRequest.getActive()
+            );
             List<StockResponse> responses = new ArrayList<>();
             for (Stock stock : page) {
                 StockResponse stockResponse = new StockResponse();

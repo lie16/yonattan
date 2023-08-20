@@ -1,8 +1,11 @@
 package com.training.yonattan.specification;
 
 import com.training.yonattan.entities.Stock;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StocksSpecification  {
     private  Specification<Stock> stockCode(String stockCode) {
         return (root, query, criteriaBuilder) ->
@@ -15,10 +18,10 @@ public class StocksSpecification  {
     private  Specification<Stock> active (String active) {
         if(active.equalsIgnoreCase("y")){
             return (root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("active"), "true");
+                    criteriaBuilder.equal(root.get("active"), true);
         } else if(active.equalsIgnoreCase("n")) {
             return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("active"), "false");
+                criteriaBuilder.equal(root.get("active"), false);
         } else {
             throw new RuntimeException("Unknown parameter: " + active);
         }
@@ -38,6 +41,8 @@ public class StocksSpecification  {
         if(active!=null && !active.isBlank()){
             spec = spec.and(active(active));
         }
+        System.out.println("Specification = ");
+        System.out.println(spec.toString());
         return  spec;
     }
 }
