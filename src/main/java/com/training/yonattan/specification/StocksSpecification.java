@@ -1,9 +1,9 @@
 package com.training.yonattan.specification;
 
-import com.training.yonattan.entities.Stock;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import com.training.yonattan.entities.Stock;
 
 @Component
 public class StocksSpecification  {
@@ -30,7 +30,7 @@ public class StocksSpecification  {
             String stockCode,
             String description,
             String active) {
-        Specification spec = Specification.where(null);
+        Specification<Stock> spec = Specification.where(null);
 
         if(stockCode!=null && !stockCode.isBlank()){
             spec = spec.and(stockCode(stockCode));

@@ -1,24 +1,23 @@
 package com.training.yonattan.services;
 
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.training.yonattan.entities.Stock;
 import com.training.yonattan.entities.Users;
 import com.training.yonattan.handler.request.CreateStockDTO;
 import com.training.yonattan.repository.StockRepo;
 import com.training.yonattan.specification.StocksSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class StocksService {
@@ -28,25 +27,21 @@ public class StocksService {
     @Autowired
     private StocksSpecification stocksSpecification;
 
-    public Stock getStockById(int id)
-    {
+    public Stock getStockById(int id) {
         Optional<Stock> employee = stockRepo.findById(id);
-//        return employee.isPresent() ? employee.get() : null;
         return employee.orElse(null);
     }
 
-    public Page<Stock> getAll(){
+    public Page<Stock> getAll() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Stock> page = stockRepo.findAll(pageable);
-        return page;
+        return stockRepo.findAll(pageable);
     }
+
     public Page<Stock> findAll(int page, int pageSize, String stockCode,
-                               String description,
-                               String active)
-    {
+            String description,
+            String active) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Stock> data = stockRepo.findAll(stocksSpecification.filter(stockCode, description, active), pageable);
-        return data;
+        return stockRepo.findAll(stocksSpecification.filter(stockCode, description, active), pageable);
     }
 
     @Transactional
@@ -54,8 +49,8 @@ public class StocksService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         UUID id = null;
-        if (principal instanceof Users) {
-            id = ((Users) principal).getUserId();
+        if (principal instanceof Users users) {
+            id = users.getUserId();
         } else {
             id = UUID.fromString(principal.toString());
         }
@@ -69,5 +64,27 @@ public class StocksService {
         stock.setModifiedBy(id);
         stockRepo.save(stock);
         return "employee created successfully";
+    }
+
+    @Transactional
+    public String updateStock(CreateStockDTO createStockDTO, UUID id) throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        UUID userId = null;
+        if (principal instanceof Users users) {
+            userId = users.getUserId();
+        } else {
+            userId = UUID.fromString(principal.toString());
+        }
+
+//        TODO perlu dipindah ke spec juga
+        Optional<Stock> data = stockRepo.findById(id);
+
+        if(data.isEmpty()) {
+            throw new Exception("Stock code " + createStockDTO.getStockCode() + " not found");
+        }
+        data.get().setDescription(createStockDTO.getDescription());
+        data.get().setActive(createStockDTO.getActive());
+        data.get().setModifiedBy(userId);
     }
 }
