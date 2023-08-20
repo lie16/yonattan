@@ -44,8 +44,6 @@ public class StockController {
     @PostMapping("/filters")
     public ResponseEntity<Object> getStockFiltered(@RequestBody FilterStockRequest filterStockRequest) {
         try{
-            System.out.println("page = " + filterStockRequest.getPage());
-            System.out.println("active = " + filterStockRequest.getActive());
             Page<Stock> page = stocksService.findAll(
                     filterStockRequest.getPage(),
                     filterStockRequest.getPageSize(),

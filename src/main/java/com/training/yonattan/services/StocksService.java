@@ -44,15 +44,8 @@ public class StocksService {
                                String description,
                                String active)
     {
-        System.out.println("page = " + page + ", pageSize = " + pageSize );
-        System.out.println("stockCode = " + stockCode + ", description = " + description + ", active = " + active);
-//        Specification<Stock> spec = stocksSpecification.filter(stockCode, description, active);
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Stock> data = stockRepo.findAll(stocksSpecification.filter(stockCode, description, active), pageable);
-        System.out.println("data");
-        System.out.println(data);
-
-//        return employee.isPresent() ? employee.get() : null;
         return data;
     }
 
