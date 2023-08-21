@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.training.yonattan.entities.Stock;
+import com.training.yonattan.entities.StockType;
 import com.training.yonattan.handler.request.CreateStockDTO;
 import com.training.yonattan.handler.request.FilterStockRequest;
 import com.training.yonattan.handler.response.ResponseHandler;
@@ -60,8 +61,16 @@ public class StockController {
                 StockResponse stockResponse = new StockResponse();
                 stockResponse.setStockId(stock.getStockId());
                 stockResponse.setStockCode(stock.getStockCode());
+                System.out.println(stock.getStockCode());
                 stockResponse.setDescription(stock.getDescription());
                 stockResponse.setActive(stock.getActive());
+                StockType stockType = stock.getStockType();
+                System.out.println("stockType");
+                System.out.println(stockType);
+                if(stockType != null){
+                    stockResponse.setStockTypeCode(stockType.getStockTypeCode());
+                    stockResponse.setStockTypeDescription(stockType.getDescription());
+                }
                 responses.add(stockResponse);
             }
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
