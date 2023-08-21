@@ -27,9 +27,9 @@ public class StocksService {
     @Autowired
     private StocksSpecification stocksSpecification;
 
-    public Stock getStockById(int id) {
-        Optional<Stock> employee = stockRepo.findById(id);
-        return employee.orElse(null);
+    public Stock getStockById(UUID id) {
+        Optional<Stock> stock = stockRepo.findById(id);
+        return stock.orElse(null);
     }
 
     public Page<Stock> getAll() {
@@ -63,11 +63,11 @@ public class StocksService {
         stock.setCreatedBy(id);
         stock.setModifiedBy(id);
         stockRepo.save(stock);
-        return "employee created successfully";
+        return "Stock created successfully";
     }
 
     @Transactional
-    public String updateStock(CreateStockDTO createStockDTO, UUID id) throws Exception {
+    public String updateStock(CreateStockDTO createStockDTO) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         UUID userId = null;
@@ -76,9 +76,10 @@ public class StocksService {
         } else {
             userId = UUID.fromString(principal.toString());
         }
-
-//        TODO perlu dipindah ke spec juga
-        Optional<Stock> data = stockRepo.findById(id);
+        if (createStockDTO.getStockId().isEmpty()){
+            throw new Exception("Stock code " + createStockDTO.getStockCode() + " must be set");
+        }
+        Optional<Stock> data = stockRepo.findById(createStockDTO.getStockId().get());
 
         if(data.isEmpty()) {
             throw new Exception("Stock code " + createStockDTO.getStockCode() + " not found");
@@ -86,5 +87,7 @@ public class StocksService {
         data.get().setDescription(createStockDTO.getDescription());
         data.get().setActive(createStockDTO.getActive());
         data.get().setModifiedBy(userId);
+        stockRepo.save(data.get());
+        return "Stock updated successfully";
     }
 }
