@@ -76,18 +76,20 @@ public class StocksService {
         } else {
             userId = UUID.fromString(principal.toString());
         }
-        if (createStockDTO.getStockId().isEmpty()){
+        UUID stockId = createStockDTO.getStockId().orElse(null);
+        if (stockId == null) {
             throw new Exception("Stock code " + createStockDTO.getStockCode() + " must be set");
         }
-        Optional<Stock> data = stockRepo.findById(createStockDTO.getStockId().get());
+        Optional<Stock> optStock = stockRepo.findById(stockId);
+        Stock data = optStock.orElse(null);
 
-        if(data.isEmpty()) {
+        if(data == null) {
             throw new Exception("Stock code " + createStockDTO.getStockCode() + " not found");
         }
-        data.get().setDescription(createStockDTO.getDescription());
-        data.get().setActive(createStockDTO.getActive());
-        data.get().setModifiedBy(userId);
-        stockRepo.save(data.get());
+        data.setDescription(createStockDTO.getDescription());
+        data.setActive(createStockDTO.getActive());
+        data.setModifiedBy(userId);
+        stockRepo.save(data);
         return "Stock updated successfully";
     }
 }
