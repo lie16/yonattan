@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.training.yonattan.entities.StockType;
-import com.training.yonattan.repository.StockTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.training.yonattan.entities.Stock;
+import com.training.yonattan.entities.StockType;
 import com.training.yonattan.entities.Users;
 import com.training.yonattan.handler.request.CreateStockDTO;
 import com.training.yonattan.repository.StockRepo;
+import com.training.yonattan.repository.StockTypeRepository;
 import com.training.yonattan.specification.StocksSpecification;
 
 @Service
@@ -101,6 +101,13 @@ public class StocksService {
             throw new Exception("Stock code " + createStockDTO.getStockCode() + " not found");
         }
         data.setDescription(createStockDTO.getDescription());
+        Optional<StockType> stockType = stockTypeRepository.findById(createStockDTO.getStockTypeId());
+
+        StockType stockTypeData = stockType.orElse(null);
+        if(stockTypeData == null) {
+            throw new Exception("Stock type " + createStockDTO.getStockTypeId() + " not found");
+        }
+        data.setStockType(stockTypeData);
         data.setActive(createStockDTO.getActive());
         data.setModifiedBy(userId);
         stockRepo.save(data);
