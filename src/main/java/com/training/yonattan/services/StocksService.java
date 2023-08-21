@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.training.yonattan.entities.StockType;
+import com.training.yonattan.repository.StockTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,9 @@ import com.training.yonattan.specification.StocksSpecification;
 public class StocksService {
     @Autowired
     private StockRepo stockRepo;
+
+    @Autowired
+    private StockTypeRepository stockTypeRepository;
 
     @Autowired
     private StocksSpecification stocksSpecification;
@@ -45,7 +50,7 @@ public class StocksService {
     }
 
     @Transactional
-    public String createStock(CreateStockDTO createStockDTO) {
+    public String createStock(CreateStockDTO createStockDTO) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         UUID id = null;
@@ -58,6 +63,15 @@ public class StocksService {
         stock.setStockCode(createStockDTO.getStockCode());
         stock.setDescription(createStockDTO.getDescription());
         stock.setActive(createStockDTO.getActive());
+
+        Optional<StockType> stockType = stockTypeRepository.findById(createStockDTO.getStockTypeId());
+
+        StockType stockTypeData = stockType.orElse(null);
+        if(stockTypeData == null) {
+            throw new Exception("Stock type " + createStockDTO.getStockTypeId() + " not found");
+        }
+
+        stock.setStockType(stockTypeData);
         stock.setCreatedDate(new Date());
         stock.setUpdatedDate(new Date());
         stock.setCreatedBy(id);

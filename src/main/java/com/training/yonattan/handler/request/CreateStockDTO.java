@@ -11,4 +11,5 @@ public class CreateStockDTO {
     private String stockCode;
     private String description;
     private Boolean active;
+    private Integer stockTypeId;
 }
