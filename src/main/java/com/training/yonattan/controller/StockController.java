@@ -33,7 +33,7 @@ public class StockController {
 
     @GetMapping("")
     public ResponseEntity<Object> getStock() {
-        try{
+        try {
             Page<Stock> page = stocksService.getAll();
             List<StockResponse> responses = new ArrayList<>();
             for (Stock stock : page) {
@@ -46,21 +46,15 @@ public class StockController {
             }
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
                     page.getTotalElements(), page.getTotalPages(), responses);
-        } catch (Exception e){
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0,0,null);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0, 0, null);
         }
     }
 
     @GetMapping("/filters")
-    public ResponseEntity<Object> getStockFiltered(@ModelAttribute  FilterStockRequest filterParams) {
-        try{
-            Page<Stock> pageData = stocksService.findAll(
-                    filterParams.getPage(),
-                    filterParams.getPageSize(),
-                    filterParams.getStockCode(),
-                    filterParams.getDescription(),
-                    filterParams.getActive()
-            );
+    public ResponseEntity<Object> getStockFiltered(@ModelAttribute FilterStockRequest filterParams) {
+        try {
+            Page<Stock> pageData = stocksService.findAll(filterParams);
             List<StockResponse> responses = new ArrayList<>();
             for (Stock stock : pageData) {
                 StockResponse stockResponse = new StockResponse();
@@ -72,41 +66,43 @@ public class StockController {
             }
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
                     pageData.getTotalElements(), pageData.getTotalPages(), responses);
-        } catch (Exception e){
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0,0,null);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0, 0, null);
         }
     }
 
     @GetMapping("/find-by-id")
     public ResponseEntity<Object> getStockById(@RequestParam("stockId") UUID stockId) {
-        try{
+        try {
             Stock responses = stocksService.getStockById(stockId);
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
                     0, 0, responses);
-        } catch (Exception e){
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0,0,null);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0, 0, null);
         }
     }
 
     @PostMapping("/create")
     public ResponseEntity<Object> createStock(@RequestBody CreateStockDTO createStockDTO) {
-        try{
+        try {
             String response = stocksService.createStock(createStockDTO);
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
                     0, 0, response);
-        } catch (Exception e){
-            return ResponseHandler.generateResponse(FunctionStatus.ERROR, HttpStatus.MULTI_STATUS, 0,0,e.getMessage());
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(FunctionStatus.ERROR, HttpStatus.MULTI_STATUS, 0, 0,
+                    e.getMessage());
         }
     }
 
     @PutMapping("/update")
     public ResponseEntity<Object> updateStock(@RequestBody CreateStockDTO createStockDTO) {
-        try{
+        try {
             String response = stocksService.updateStock(createStockDTO);
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
                     0, 0, response);
-        } catch (Exception e){
-            return ResponseHandler.generateResponse(FunctionStatus.ERROR, HttpStatus.MULTI_STATUS, 0,0,e.getMessage());
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(FunctionStatus.ERROR, HttpStatus.MULTI_STATUS, 0, 0,
+                    e.getMessage());
         }
     }
 }

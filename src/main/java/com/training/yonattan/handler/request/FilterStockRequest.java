@@ -9,4 +9,5 @@ public class FilterStockRequest extends BaseRequest{
     private String stockCode;
     private String description;
     private String active;
+    private Integer stockTypeId;
 }

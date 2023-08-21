@@ -26,10 +26,15 @@ public class StocksSpecification  {
             throw new RuntimeException("Unknown parameter: " + active);
         }
     }
+    private  Specification<Stock> stockType (int stockTypeId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("stock_type_stock_type_id"), stockTypeId);
+    }
     public Specification<Stock> filter(
             String stockCode,
             String description,
-            String active) {
+            String active,
+            Integer stockType) {
         Specification<Stock> spec = Specification.where(null);
 
         if(stockCode!=null && !stockCode.isBlank()){
@@ -41,8 +46,9 @@ public class StocksSpecification  {
         if(active!=null && !active.isBlank()){
             spec = spec.and(active(active));
         }
-        System.out.println("Specification = ");
-        System.out.println(spec.toString());
+        if(stockType != null){
+            spec = spec.and(stockType(stockType));
+        }
         return  spec;
     }
 }

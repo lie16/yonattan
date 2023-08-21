@@ -17,6 +17,7 @@ import com.training.yonattan.entities.Stock;
 import com.training.yonattan.entities.StockType;
 import com.training.yonattan.entities.Users;
 import com.training.yonattan.handler.request.CreateStockDTO;
+import com.training.yonattan.handler.request.FilterStockRequest;
 import com.training.yonattan.repository.StockRepo;
 import com.training.yonattan.repository.StockTypeRepository;
 import com.training.yonattan.specification.StocksSpecification;
@@ -42,11 +43,10 @@ public class StocksService {
         return stockRepo.findAll(pageable);
     }
 
-    public Page<Stock> findAll(int page, int pageSize, String stockCode,
-            String description,
-            String active) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        return stockRepo.findAll(stocksSpecification.filter(stockCode, description, active), pageable);
+    public Page<Stock> findAll(FilterStockRequest filterParams) {
+        Pageable pageable = PageRequest.of(filterParams.getPage(), filterParams.getPageSize());
+        return stockRepo.findAll(stocksSpecification.filter(filterParams.getStockCode(), filterParams.getDescription(),
+                filterParams.getActive(), filterParams.getStockTypeId()), pageable);
     }
 
     @Transactional
@@ -67,7 +67,7 @@ public class StocksService {
         Optional<StockType> stockType = stockTypeRepository.findById(createStockDTO.getStockTypeId());
 
         StockType stockTypeData = stockType.orElse(null);
-        if(stockTypeData == null) {
+        if (stockTypeData == null) {
             throw new Exception("Stock type " + createStockDTO.getStockTypeId() + " not found");
         }
 
@@ -97,14 +97,14 @@ public class StocksService {
         Optional<Stock> optStock = stockRepo.findById(stockId);
         Stock data = optStock.orElse(null);
 
-        if(data == null) {
+        if (data == null) {
             throw new Exception("Stock code " + createStockDTO.getStockCode() + " not found");
         }
         data.setDescription(createStockDTO.getDescription());
         Optional<StockType> stockType = stockTypeRepository.findById(createStockDTO.getStockTypeId());
 
         StockType stockTypeData = stockType.orElse(null);
-        if(stockTypeData == null) {
+        if (stockTypeData == null) {
             throw new Exception("Stock type " + createStockDTO.getStockTypeId() + " not found");
         }
         data.setStockType(stockTypeData);
