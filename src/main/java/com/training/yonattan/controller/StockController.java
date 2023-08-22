@@ -58,19 +58,7 @@ public class StockController {
             Page<Stock> pageData = stocksService.findAll(filterParams);
             List<StockResponse> responses = new ArrayList<>();
             for (Stock stock : pageData) {
-                StockResponse stockResponse = new StockResponse();
-                stockResponse.setStockId(stock.getStockId());
-                stockResponse.setStockCode(stock.getStockCode());
-                System.out.println(stock.getStockCode());
-                stockResponse.setDescription(stock.getDescription());
-                stockResponse.setActive(stock.getActive());
-                StockType stockType = stock.getStockType();
-                System.out.println("stockType");
-                System.out.println(stockType);
-                if(stockType != null){
-                    stockResponse.setStockTypeCode(stockType.getStockTypeCode());
-                    stockResponse.setStockTypeDescription(stockType.getDescription());
-                }
+                StockResponse stockResponse = getStockResponse(stock);
                 responses.add(stockResponse);
             }
             return ResponseHandler.generateResponse(FunctionStatus.SUCCESS, HttpStatus.OK,
@@ -78,6 +66,20 @@ public class StockController {
         } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, 0, 0, null);
         }
+    }
+
+    private static StockResponse getStockResponse(Stock stock) {
+        StockResponse stockResponse = new StockResponse();
+        stockResponse.setStockId(stock.getStockId());
+        stockResponse.setStockCode(stock.getStockCode());
+        stockResponse.setDescription(stock.getDescription());
+        stockResponse.setActive(stock.getActive());
+        StockType stockType = stock.getStockType();
+        if(stockType != null){
+            stockResponse.setStockTypeCode(stockType.getStockTypeCode());
+            stockResponse.setStockTypeDescription(stockType.getDescription());
+        }
+        return stockResponse;
     }
 
     @GetMapping("/find-by-id")

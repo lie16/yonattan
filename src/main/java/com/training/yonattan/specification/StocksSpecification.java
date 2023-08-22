@@ -28,7 +28,7 @@ public class StocksSpecification  {
     }
     private  Specification<Stock> stockType (int stockTypeId) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("stock_type_stock_type_id"), stockTypeId);
+                criteriaBuilder.equal(root.get("stock_type"), stockTypeId);
     }
     public Specification<Stock> filter(
             String stockCode,

@@ -45,6 +45,10 @@ public class StocksService {
 
     public Page<Stock> findAll(FilterStockRequest filterParams) {
         Pageable pageable = PageRequest.of(filterParams.getPage(), filterParams.getPageSize());
+        System.out.println("service");
+        System.out.println(filterParams.getStockCode());
+        System.out.println(filterParams.getPageSize());
+        // System.out.println(filterParams.getStockTypeId());
         return stockRepo.findAll(stocksSpecification.filter(filterParams.getStockCode(), filterParams.getDescription(),
                 filterParams.getActive(), filterParams.getStockTypeId()), pageable);
     }
