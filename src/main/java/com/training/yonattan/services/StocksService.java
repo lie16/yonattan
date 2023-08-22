@@ -74,6 +74,9 @@ public class StocksService {
         if (stockTypeData == null) {
             throw new Exception("Stock type " + createStockDTO.getStockTypeId() + " not found");
         }
+        if (Boolean.FALSE.equals(stockTypeData.getActive())) {
+            throw new Exception("Stock type no longer active.");
+        }
 
         stock.setStockType(stockTypeData);
         stock.setCreatedDate(new Date());
